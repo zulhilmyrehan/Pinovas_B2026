@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Penilaian PINOVAS 2026 (Komponen B)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- FontAwesome untuk Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between selection:bg-indigo-600 selection:text-white">
+
+    <!-- HEADER / BANNER -->
+    <header class="w-full bg-white shadow-sm border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md text-2xl">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-extrabold tracking-wide text-slate-900">PINOVAS 2026 (KOMPONEN B)</h1>
+                    <p class="text-xs font-semibold text-indigo-600 tracking-wider">KEMENTERIAN & LPNM • PERINGKAT AKHIR</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="openAdminModal()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition flex items-center gap-2 shadow-sm">
+                    <i class="fa-solid fa-lock"></i> Portal Admin
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl mx-auto w-full px-4 py-8 flex-grow">
+        
+        <!-- BANNER TAJUK UTAMA & ARAHAN RASMI -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 mb-8 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-full blur-2xl opacity-50 -mr-10 -mt-10"></div>
+            <span class="text-xs font-bold px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full uppercase tracking-widest border border-indigo-100">Borang Rasmi Penilaian Panel</span>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 mt-3">BORANG MARKAH PERINGKAT AKHIR PINOVAS 2026 (KOMPONEN B)</h2>
+            
+            <div class="mt-4 text-sm text-slate-600 space-y-3 border-l-2 border-indigo-600 pl-4 whitespace-pre-line">
+                <p><strong>ARAHAN KEPADA PANEL:</strong></p>
+                <p>1. Penilaian dibuat berdasarkan komponen B, iaitu:-
+Pameran dan Poster                                                              : 30 markah
+<strong>JUMLAH MARKAH PENUH: 30 markah</strong></p>
+                
+                <p>2. Panel hendaklah menilai kandungan projek, kekuatan idea, aplikasi STEM dan kebolehlaksanaan pembangunan produk berdasarkan bahan yang dihantar oleh peserta.</p>
+                
+                <p>3. Panel hendaklah memberikan komen ringkas bagi membantu urusetia membuat semakan sekiranya berlaku perbezaan markah yang ketara.</p>
+
+                <div class="flex flex-wrap items-center gap-3 pt-2">
+                    <span class="text-xs font-bold px-3 py-1 bg-slate-100 rounded-md text-slate-700 border border-slate-200">Skala: 1 Sangat Lemah • 2 Lemah • 3 Sederhana • 4 Baik • 5 Sangat Baik</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- LAYOUT UTAMA -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+            
+            <!-- KIRI: BORANG PENILAIAN -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- NAVIGATION TABS -->
+                <div class="flex flex-wrap gap-2 bg-white p-2 rounded-xl shadow-sm border border-slate-200">
+                    <button type="button" onclick="switchSection(1)" id="tab-1" class="tab-btn flex-1 py-2 px-4 rounded-lg text-xs md:text-sm font-bold transition bg-indigo-600 text-white shadow-sm">1. Maklumat Projek</button>
+                    <button type="button" onclick="switchSection(2)" id="tab-2" class="tab-btn flex-1 py-2 px-4 rounded-lg text-xs md:text-sm font-bold transition bg-slate-100 text-slate-600 hover:bg-slate-200">2. Pameran & Poster</button>
+                    <button type="button" onclick="switchSection(3)" id="tab-3" class="tab-btn flex-1 py-2 px-4 rounded-lg text-xs md:text-sm font-bold transition bg-slate-100 text-slate-600 hover:bg-slate-200">3. Pengesahan</button>
+                </div>
+
+                <form id="evaluationForm" onsubmit="submitForm(event)" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 space-y-6">
+                    
+                    <!-- BAHAGIAN 1: MAKLUMAT PROJEK -->
+                    <div id="section-1" class="form-section space-y-6">
+                        <div class="border-b border-slate-100 pb-3">
+                            <span class="text-xs font-bold text-indigo-600 uppercase">Bahagian 01</span>
+                            <h3 class="text-xl font-bold text-slate-900">Maklumat Projek & Pasukan</h3>
+                            <p class="text-xs text-slate-500">Sila pilih nama sekolah mengikut senarai rasmi. Nama projek akan dipaparkan secara automatik.</p>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-1">NAMA SEKOLAH <span class="text-red-500">*</span></label>
+                                <select id="schoolSelect" onchange="onSchoolChange()" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none text-sm font-medium">
+                                    <option value="">-- Sila Pilih Nama Sekolah --</option>
+                                    <option value="SMK Tan Sri Mohamed Rahmat">SMK Tan Sri Mohamed Rahmat</option>
+                                    <option value="SMK Tumpat">SMK Tumpat</option>
+                                    <option value="SMK Tun Syed Nasir Ismail">SMK Tun Syed Nasir Ismail</option>
+                                    <option value="SMK Seksyen 18">SMK Seksyen 18</option>
+                                    <option value="Kolej Vokasional Ampangan">Kolej Vokasional Ampangan</option>
+                                    <option value="SMK Jeneri">SMK Jeneri</option>
+                                    <option value="SM Sains Pasir Puteh">SM Sains Pasir Puteh</option>
+                                    <option value="SMK Perantau Damai">SMK Perantau Damai</option>
+                                    <option value="SMK Matang Jaya">SMK Matang Jaya</option>
+                                    <option value="Kolej Vokasional Datuk Seri Abu Zahar Isnin">Kolej Vokasional Datuk Seri Abu Zahar Isnin</option>
+                                </select>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-bold text-slate-700 mb-1">NAMA PASUKAN</label>
+                                    <input type="text" id="teamInput" readonly placeholder="Auto-papar mengikut sekolah" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl text-slate-500 text-sm font-semibold cursor-not-allowed">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-bold text-slate-700 mb-1">NAMA PROJEK INOVASI <span class="text-red-500">*</span></label>
+                                    <input type="text" id="projectInput" required placeholder="Auto-papar mengikut sekolah" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl text-slate-500 text-sm font-semibold cursor-not-allowed">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end pt-4">
+                            <button type="button" onclick="nextSection(2)" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-sm shadow-sm transition flex items-center gap-2">
+                                Seterusnya <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- BAHAGIAN 2: KRITERIA PAMERAN & POSTER -->
+                    <div id="section-2" class="form-section space-y-8 hidden">
+                        <div class="border-b border-slate-100 pb-3">
+                            <span class="text-xs font-bold text-indigo-600 uppercase">Bahagian 02</span>
+                            <h3 class="text-xl font-bold text-slate-900">B. Pameran dan Poster (30 Markah)</h3>
+                            <p class="text-xs text-slate-500">Sila berikan penilaian 1 hingga 5 bagi setiap kriteria komponen B.</p>
+                        </div>
+
+                        <div class="space-y-6" id="questions-B"></div>
+
+                        <div class="flex justify-between pt-4">
+                            <button type="button" onclick="nextSection(1)" class="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-sm transition">
+                                <i class="fa-solid fa-arrow-left"></i> Kembali
+                            </button>
+                            <button type="button" onclick="nextSection(3)" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-sm shadow-sm transition flex items-center gap-2">
+                                Seterusnya <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- BAHAGIAN 3: PENGESAHAN & ULASAN -->
+                    <div id="section-3" class="form-section space-y-6 hidden">
+                        <div class="border-b border-slate-100 pb-3">
+                            <span class="text-xs font-bold text-indigo-600 uppercase">Bahagian 03</span>
+                            <h3 class="text-xl font-bold text-slate-900">Ulasan & Pengesahan Panel Juri</h3>
+                            <p class="text-xs text-slate-500">Sila pilih nama panel dan masukkan ulasan ringkas (Wajib diisi).</p>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-2">NAMA PANEL JURI <span class="text-red-500">*</span></label>
+                                <div class="space-y-2">
+                                    <label class="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer hover:bg-indigo-50/50 transition">
+                                        <input type="radio" name="panelName" value="PUAN HAJAH LINDA BINTI BUANG (KETUA JURI, LPNM)" required class="w-4 h-4 text-indigo-600 focus:ring-indigo-600">
+                                        <span class="text-sm font-semibold text-slate-700">PUAN HAJAH LINDA BINTI BUANG (KETUA JURI, LPNM)</span>
+                                    </label>
+                                    <label class="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer hover:bg-indigo-50/50 transition">
+                                        <input type="radio" name="panelName" value="PUAN MARY TIONG TZE MEI (IMAT KPKM, JURI 1)" class="w-4 h-4 text-indigo-600 focus:ring-indigo-600">
+                                        <span class="text-sm font-semibold text-slate-700">PUAN MARY TIONG TZE MEI (IMAT KPKM, JURI 1)</span>
+                                    </label>
+                                    <label class="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer hover:bg-indigo-50/50 transition">
+                                        <input type="radio" name="panelName" value="PUAN RABITAH ABDUL RAZAK (KPM, JURI 2)" class="w-4 h-4 text-indigo-600 focus:ring-indigo-600">
+                                        <span class="text-sm font-semibold text-slate-700">PUAN RABITAH ABDUL RAZAK (KPM, JURI 2)</span>
+                                    </label>
+                                    <label class="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer hover:bg-indigo-50/50 transition">
+                                        <input type="radio" name="panelName" value="PROF. MADYA DR. MOHD NAZRUL ROSLAN (UTHM, JURI 3)" class="w-4 h-4 text-indigo-600 focus:ring-indigo-600">
+                                        <span class="text-sm font-semibold text-slate-700">PROF. MADYA DR. MOHD NAZRUL ROSLAN (UTHM, JURI 3)</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-1">ULASAN / KOMEN RINGKAS <span class="text-red-500">*</span></label>
+                                <textarea id="commentsInput" rows="4" required placeholder="Masukkan ulasan ringkas mengenai projek..." class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none text-sm font-medium"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between pt-4">
+                            <button type="button" onclick="nextSection(2)" class="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-sm transition">
+                                <i class="fa-solid fa-arrow-left"></i> Kembali
+                            </button>
+                            <button type="submit" id="submitBtn" class="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-sm shadow-md transition flex items-center gap-2">
+                                <i class="fa-solid fa-paper-plane"></i> Hantar Markah Rasmi
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- KANAN: WIDGET LIVE CALCULATION -->
+            <div class="lg:col-span-1 sticky top-6 space-y-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-4">
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-slate-400">Markah Semasa</span>
+                    
+                    <div class="flex items-baseline gap-2">
+                        <span id="liveTotalScore" class="text-5xl font-black text-slate-900">0</span>
+                        <span class="text-lg font-bold text-slate-400">/ 30 markah</span>
+                    </div>
+
+                    <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+                        <div id="liveProgressBar" class="bg-indigo-600 h-full transition-all duration-300 w-0"></div>
+                    </div>
+
+                    <div class="flex justify-between items-center text-xs font-bold text-slate-600">
+                        <span id="livePercentage">0.0%</span>
+                        <span id="liveCountText">0 daripada 6 kriteria dinilai</span>
+                    </div>
+
+                    <div class="border-t border-slate-100 pt-4 space-y-2 text-sm font-semibold">
+                        <div class="flex justify-between text-slate-600">
+                            <span>B (Pameran & Poster)</span>
+                            <span id="scoreB" class="font-bold text-indigo-600">0 / 30</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 border-t border-slate-100">
+                        <button type="button" onclick="resetForm()" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs transition">
+                            <i class="fa-solid fa-rotate-right"></i> Kosongkan Borang
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-500">
+        <p>&copy; 2026 PINOVAS • Lembaga Perindustrian Nanas Malaysia (LPNM) & Kementerian Pendidikan Malaysia.</p>
+    </footer>
+
+    <!-- MODAL PORTAL ADMIN -->
+    <div id="adminModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-5xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+            
+            <!-- ADMIN LOGIN VIEW -->
+            <div id="adminLoginView" class="p-8 space-y-6 max-w-md mx-auto w-full my-auto">
+                <div class="text-center space-y-2">
+                    <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-sm">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h3 class="text-2xl font-black text-slate-900">Log Masuk Admin</h3>
+                    <p class="text-xs text-slate-500">Sila masukkan ID Pengguna dan Kata Laluan rasmi.</p>
+                </div>
+                
+                <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">USERNAME</label>
+                        <input type="text" id="adminUser" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-600">
+                    </div>
+                    <div class="relative">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">PASSWORD</label>
+                        <input type="password" id="adminPass" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-600 pr-10">
+                        <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-8 text-slate-400 hover:text-slate-700">
+                            <i id="eyeIcon" class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                    <div id="loginError" class="text-red-500 text-xs font-bold text-center hidden"></div>
+                    <div class="flex gap-3 pt-2">
+                        <button type="button" onclick="closeAdminModal()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-sm">Batal</button>
+                        <button type="submit" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-sm shadow-sm">Masuk</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- ADMIN DASHBOARD VIEW -->
+            <div id="adminDashboardView" class="hidden flex flex-col h-full">
+                <div class="p-6 bg-slate-900 text-white flex items-center justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold">Dashboard Admin Sistem (Komponen B)</h3>
+                        <p class="text-xs text-indigo-300">Rekod diselaraskan terus dari Google Sheets PINOVAS 2026.</p>
+                    </div>
+                    <button onclick="closeAdminModal()" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-bold text-white flex items-center gap-2 transition">
+                        <i class="fa-solid fa-right-from-bracket"></i> Log keluar
+                    </button>
+                </div>
+
+                <div class="p-6 overflow-y-auto flex-grow space-y-6 bg-slate-50">
+                    
+                    <!-- KAD STATISTIK ANALITIK -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-1">
+                            <span class="text-xs font-bold text-slate-400 uppercase">Jumlah rekod</span>
+                            <div id="statTotalRec" class="text-3xl font-black text-slate-900">0</div>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-1">
+                            <span class="text-xs font-bold text-slate-400 uppercase">Purata markah</span>
+                            <div id="statAvgScore" class="text-3xl font-black text-slate-900">0/30</div>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-1">
+                            <span class="text-xs font-bold text-slate-400 uppercase">Markah tertinggi</span>
+                            <div id="statHighScore" class="text-3xl font-black text-slate-900">0/30</div>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-1">
+                            <span class="text-xs font-bold text-slate-400 uppercase">Penilaian lengkap</span>
+                            <div id="statComplete" class="text-3xl font-black text-slate-900">0</div>
+                        </div>
+                    </div>
+
+                    <!-- REKOD PENILAIAN & PENAPIS -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                        <div class="flex justify-between items-center flex-wrap gap-4">
+                            <h4 class="text-lg font-extrabold text-slate-900">Rekod penilaian</h4>
+                            <div class="flex gap-2">
+                                <button onclick="loadAdminData()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs flex items-center gap-2">
+                                    <i class="fa-solid fa-rotate"></i> Muat Semula
+                                </button>
+                                <button onclick="exportCSV()" class="px-4 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl font-bold text-xs flex items-center gap-2">
+                                    <i class="fa-solid fa-file-excel"></i> Eksport CSV
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- FILTER CONTROLS -->
+                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-2">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 mb-1">Carian</label>
+                                <input type="text" id="filterSearch" oninput="filterTableData()" placeholder="Sekolah atau projek" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-600">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 mb-1">Sekolah</label>
+                                <select id="filterSchool" onchange="filterTableData()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-600">
+                                    <option value="">Semua sekolah</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 mb-1">Julat markah</label>
+                                <select id="filterScore" onchange="filterTableData()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-600">
+                                    <option value="">Semua markah</option>
+                                    <option value="25">25 - 30 Markah (Cemerlang)</option>
+                                    <option value="20">20 - 24 Markah (Baik)</option>
+                                    <option value="15">Bawah 20 Markah</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 mb-1">Susunan</label>
+                                <select id="filterSort" onchange="filterTableData()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-600">
+                                    <option value="latest">Terkini</option>
+                                    <option value="highest">Markah Tertinggi</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- TABLE -->
+                        <div class="overflow-x-auto border border-slate-200 rounded-xl">
+                            <table class="w-full text-left text-xs">
+                                <thead class="bg-slate-100 text-slate-700 uppercase font-bold border-b border-slate-200">
+                                    <tr>
+                                        <th class="p-3">Nama sekolah</th>
+                                        <th class="p-3">Nama projek</th>
+                                        <th class="p-3">Markah / 30</th>
+                                        <th class="p-3">Peratusan</th>
+                                        <th class="p-3">Status</th>
+                                        <th class="p-3">Panel</th>
+                                        <th class="p-3">Tarikh</th>
+                                        <th class="p-3 text-center">Tindakan</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminTableBody" class="divide-y divide-slate-100"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL BUTIRAN PENILAIAN -->
+    <div id="detailModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+            <div class="p-6 bg-slate-900 text-white flex items-center justify-between">
+                <h3 class="text-lg font-bold">Butiran penilaian</h3>
+                <div class="flex gap-2">
+                    <button onclick="window.print()" class="px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-lg text-xs font-bold text-white flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-print"></i> Cetak ringkasan
+                    </button>
+                    <button onclick="closeDetailModal()" class="w-8 h-8 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center text-white transition">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="detailModalContent" class="p-6 overflow-y-auto space-y-6 text-xs md:text-sm"></div>
+        </div>
+    </div>
+
+    <!-- MODAL NOTIFIKASI -->
+    <div id="modalAlert" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl">
+            <div id="alertIcon" class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mx-auto text-2xl">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h4 id="alertTitle" class="text-xl font-bold text-slate-900">Berjaya!</h4>
+            <p id="alertMessage" class="text-xs text-slate-600">Maklumat telah berjaya disimpan.</p>
+            <button onclick="closeAlert()" class="w-full py-2.5 bg-indigo-600 text-white font-bold rounded-xl text-sm shadow-sm hover:bg-indigo-700 transition">Tutup</button>
+        </div>
+    </div>
+
+    <script>
+        const projectDataMap = {
+            "SMK Tan Sri Mohamed Rahmat": { team: "Tasmor", project: "FILAMENAS" },
+            "SMK Tumpat": { team: "Pine - Zorb", project: "Pine-Zorb" },
+            "SMK Tun Syed Nasir Ismail": { team: "Pine Glow Innovators", project: "Oilsorb Ecopad Modular" },
+            "SMK Seksyen 18": { team: "The Eco - Sentinels", project: "PINEPURE : Deodoran Organik Ekstrak Jambul Nanas" },
+            "Kolej Vokasional Ampangan": { team: "KVAS Econova Team", project: "Reclean Brewscrub" },
+            "SMK Jeneri": { team: "Green Igniters", project: "Ecoflam Cube" },
+            "SM Sains Pasir Puteh": { team: "Econova", project: "PINERGY" },
+            "SMK Perantau Damai": { team: "Triple A Innovator", project: "Pineco Grow Pot" },
+            "SMK Matang Jaya": { team: "Pine Kenyalang", project: "BIO-FLOCPINE" },
+            "Kolej Vokasional Datuk Seri Abu Zahar Isnin": { team: "Tepastart", project: "TEPASTART : Starter Serbuk Sourdough" }
+        };
+
+        const GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxVCD_QKwfj5VZrUOI2mn-lDHC8nSxShQaALHueSi9ZOipLWSF23eIw3jUO5Ufv6jnd/exec';
+
+        const criteriaList = {
+            B: [
+                { id: "B1_1", category: "B1. POSTER (Kajian/Akademik)", desc: "Kandungan poster lengkap meliputi pengenalan, penerangan projek, keunikan dan kelebihan, cara penggunaan serta potensi produk", text: "B1. Poster (Kajian/Akademik) - Kandungan poster lengkap meliputi pengenalan, penerangan projek, keunikan dan kelebihan, cara penggunaan serta potensi produk" },
+                { id: "B2_1", category: "B2. SUSUN ATUR BOOTH, POSTER DAN PRODUK", desc: "Panel juri menilai susun atur pameran dan poster dari segi kekemasan, daya tarikan visual serta kejelasan maklumat yang disampaikan kepada pengunjung.", text: "B2.1 Susun atur booth/poster kemas dan menarik" },
+                { id: "B2_2", category: "B2. SUSUN ATUR BOOTH, POSTER DAN PRODUK", desc: "Panel juri menilai susun atur pameran dan poster dari segi kekemasan, daya tarikan visual serta kejelasan maklumat yang disampaikan kepada pengunjung.", text: "B2.2 Maklumat produk jelas, ringkas dan tepat" },
+                { id: "B2_3", category: "B2. SUSUN ATUR BOOTH, POSTER DAN PRODUK", desc: "Panel juri menilai susun atur pameran dan poster dari segi kekemasan, daya tarikan visual serta kejelasan maklumat yang disampaikan kepada pengunjung.", text: "B2.3 Bahan pameran, produk dan prototaip dengan maklumat serta label yang lengkap." },
+                { id: "B3_1", category: "B3. INTERAKSI DAN PENYAMPAIAN PESERTA", desc: "Keupayaan peserta berkomunikasi dengan pengunjung/juri dengan fakta dan keyakinan", text: "B3.1 Keupayaan peserta berkomunikasi dengan pengunjung/juri dengan fakta dan keyakinan" },
+                { id: "B3_2", category: "B3. INTERAKSI DAN PENYAMPAIAN PESERTA", desc: "Demonstrasi produk", text: "B3.2 Demonstrasi produk" }
+            ]
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderQuestions('B', 'questions-B');
+            updateLiveCalculation();
+            populateSchoolFilter();
+        });
+
+        function renderQuestions(catKey, containerId) {
+            const container = document.getElementById(containerId);
+            let html = '';
+            let currentCategory = "";
+
+            criteriaList[catKey].forEach(item => {
+                if(item.category !== currentCategory) {
+                    currentCategory = item.category;
+                    html += `
+                        <div class="bg-indigo-50/60 p-4 rounded-xl border border-indigo-100 mt-6 first:mt-0">
+                            <h4 class="font-extrabold text-indigo-900 text-sm md:text-base">${currentCategory}</h4>
+                            ${item.desc ? `<p class="text-xs text-slate-600 mt-1">(${item.desc})</p>` : ''}
+                        </div>
+                    `;
+                }
+
+                html += `
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-3">
+                        <label class="block text-sm font-bold text-slate-900">${item.text} <span class="text-red-500">*</span></label>
+                        <div class="grid grid-cols-5 gap-2 pt-1">
+                `;
+                for(let i=1; i<=5; i++) {
+                    html += `
+                        <label class="flex flex-col items-center justify-center p-3 bg-white border border-slate-200 rounded-xl cursor-pointer hover:border-indigo-600 hover:bg-indigo-50/50 transition">
+                            <input type="radio" name="${item.id}" value="${i}" required onchange="updateLiveCalculation()" class="w-4 h-4 text-indigo-600 focus:ring-indigo-600 mb-1">
+                            <span class="text-xs font-bold text-slate-700">${i}</span>
+                        </label>
+                    `;
+                }
+                html += `</div></div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function onSchoolChange() {
+            const school = document.getElementById('schoolSelect').value;
+            const teamInput = document.getElementById('teamInput');
+            const projectInput = document.getElementById('projectInput');
+            if(school && projectDataMap[school]) {
+                teamInput.value = projectDataMap[school].team;
+                projectInput.value = projectDataMap[school].project;
+            } else {
+                teamInput.value = '';
+                projectInput.value = '';
+            }
+        }
+
+        function switchSection(secNum) {
+            document.querySelectorAll('.form-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`section-${secNum}`).classList.remove('hidden');
+
+            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+                if((idx+1) === secNum) {
+                    btn.className = "tab-btn flex-1 py-2 px-4 rounded-lg text-xs md:text-sm font-bold transition bg-indigo-600 text-white shadow-sm";
+                } else {
+                    btn.className = "tab-btn flex-1 py-2 px-4 rounded-lg text-xs md:text-sm font-bold transition bg-slate-100 text-slate-600 hover:bg-slate-200";
+                }
+            });
+            window.scrollTo({ top: 200, behavior: 'smooth' });
+        }
+
+        function nextSection(secNum) {
+            if(secNum > 1) {
+                const school = document.getElementById('schoolSelect').value;
+                if(!school) {
+                    showAlert("Perhatian", "Sila pilih nama sekolah terlebih dahulu.", "warning");
+                    switchSection(1);
+                    return;
+                }
+            }
+            switchSection(secNum);
+        }
+
+        function updateLiveCalculation() {
+            let total = 0;
+            let count = 0;
+            let sumB = 0;
+
+            criteriaList.B.forEach(item => {
+                const radios = document.querySelectorAll(`input[name="${item.id}"]:checked`);
+                if(radios.length > 0) {
+                    const val = parseInt(radios[0].value);
+                    total += val;
+                    count++;
+                    sumB += val;
+                }
+            });
+
+            document.getElementById('liveTotalScore').innerText = total;
+            document.getElementById('scoreB').innerText = `${sumB} / 30`;
+
+            const percentage = ((total / 30) * 100).toFixed(1);
+            document.getElementById('livePercentage').innerText = `${percentage}%`;
+            document.getElementById('liveProgressBar').style.width = `${percentage}%`;
+            document.getElementById('liveCountText').innerText = `${count} daripada 6 kriteria dinilai`;
+        }
+
+        function resetForm() {
+            document.getElementById('evaluationForm').reset();
+            document.getElementById('teamInput').value = '';
+            document.getElementById('projectInput').value = '';
+            updateLiveCalculation();
+            switchSection(1);
+        }
+
+        async function submitForm(event) {
+            event.preventDefault();
+
+            let total = 0;
+            let scores = {};
+            
+            for(let item of criteriaList.B) {
+                const radios = document.querySelectorAll(`input[name="${item.id}"]:checked`);
+                if(radios.length === 0) {
+                    showAlert("Ralat Penilaian", `Sila lengkapkan penilaian bagi soalan ${item.id}`, "warning");
+                    return;
+                }
+                const val = parseInt(radios[0].value);
+                scores[item.id] = val;
+                total += val;
+            }
+
+            const school = document.getElementById('schoolSelect').value;
+            const team = document.getElementById('teamInput').value;
+            const project = document.getElementById('projectInput').value;
+            const panel = document.querySelector('input[name="panelName"]:checked')?.value || "";
+            const comments = document.getElementById('commentsInput').value;
+
+            const payload = {
+                id: 'PINOVAS-B-' + Math.random().toString(36).substr(2, 9),
+                timestamp: new Date().toLocaleString(),
+                school: school,
+                team: team,
+                project: project,
+                panel: panel,
+                totalScore: total,
+                scores: scores,
+                comments: comments
+            };
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Sedang Menghantar...`;
+
+            try {
+                await fetch(GOOGLE_SHEET_WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+
+                showAlert("Berjaya!", "Penilaian Komponen B telah berjaya direkodkan dan dihantar ke Google Sheets.", "success");
+                resetForm();
+            } catch (err) {
+                console.error("Gagal hantar ke Google Sheets:", err);
+                showAlert("Ralat", "Gagal menghubungi pelayan Google Sheets. Sila semak sambungan internet anda.", "warning");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Hantar Markah Rasmi`;
+            }
+        }
+
+        function openAdminModal() {
+            document.getElementById('adminModal').classList.remove('hidden');
+            document.getElementById('adminLoginView').classList.remove('hidden');
+            document.getElementById('adminDashboardView').classList.add('hidden');
+            document.getElementById('adminUser').value = '';
+            document.getElementById('adminPass').value = '';
+            document.getElementById('loginError').classList.add('hidden');
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.add('hidden');
+        }
+
+        function togglePasswordVisibility() {
+            const passInput = document.getElementById('adminPass');
+            const eyeIcon = document.getElementById('eyeIcon');
+            if(passInput.type === 'password') {
+                passInput.type = 'text';
+                eyeIcon.className = "fa-solid fa-eye-slash";
+            } else {
+                passInput.type = 'password';
+                eyeIcon.className = "fa-solid fa-eye";
+            }
+        }
+
+        function handleAdminLogin(event) {
+            event.preventDefault();
+            const u = document.getElementById('adminUser').value;
+            const p = document.getElementById('adminPass').value;
+
+            if(u === 'LPNM@Pine' && p === 'pinovas@LPNM1') {
+                document.getElementById('adminLoginView').classList.add('hidden');
+                document.getElementById('adminDashboardView').classList.remove('hidden');
+                loadAdminData();
+            } else {
+                const err = document.getElementById('loginError');
+                err.innerText = "Username atau Password anda salah!";
+                err.classList.remove('hidden');
+            }
+        }
+
+        function populateSchoolFilter() {
+            const select = document.getElementById('filterSchool');
+            select.innerHTML = '<option value="">Semua sekolah</option>';
+            Object.keys(projectDataMap).forEach(school => {
+                select.innerHTML += `<option value="${school}">${school}</option>`;
+            });
+        }
+
+        async function loadAdminData() {
+            const tbody = document.getElementById('adminTableBody');
+            tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400"><i class="fa-solid fa-spinner fa-spin"></i> Memuatkan data terus dari Google Sheets...</td></tr>`;
+
+            try {
+                const response = await fetch(GOOGLE_SHEET_WEB_APP_URL);
+                const sheetData = await response.json();
+                localStorage.setItem('pinovas_submissions_b', JSON.stringify(sheetData));
+                filterTableData();
+            } catch (err) {
+                console.error("Gagal ambil data Google Sheets:", err);
+                filterTableData();
+            }
+        }
+
+        function filterTableData() {
+            const subs = JSON.parse(localStorage.getItem('pinovas_submissions_b') || '[]');
+            const search = document.getElementById('filterSearch').value.toLowerCase();
+            const schoolFilter = document.getElementById('filterSchool').value;
+            const scoreFilter = document.getElementById('filterScore').value;
+            const sortFilter = document.getElementById('filterSort').value;
+
+            document.getElementById('statTotalRec').innerText = subs.length;
+            const totalScoreSum = subs.reduce((acc, curr) => acc + curr.totalScore, 0);
+            const avg = subs.length > 0 ? (totalScoreSum / subs.length).toFixed(1) : '0';
+            document.getElementById('statAvgScore').innerText = `${avg}/30`;
+            const maxScore = subs.length > 0 ? Math.max(...subs.map(s => s.totalScore)) : 0;
+            document.getElementById('statHighScore').innerText = `${maxScore}/30`;
+            document.getElementById('statComplete').innerText = subs.length;
+
+            let filtered = subs.filter(item => {
+                const matchSearch = item.school.toLowerCase().includes(search) || item.project.toLowerCase().includes(search);
+                const matchSchool = schoolFilter === "" || item.school === schoolFilter;
+                let matchScore = true;
+                if(scoreFilter === "25") matchScore = item.totalScore >= 25;
+                else if(scoreFilter === "20") matchScore = item.totalScore >= 20 && item.totalScore < 25;
+                else if(scoreFilter === "15") matchScore = item.totalScore < 20;
+                return matchSearch && matchSchool && matchScore;
+            });
+
+            if(sortFilter === "highest") {
+                filtered.sort((a, b) => b.totalScore - a.totalScore);
+            } else {
+                filtered.reverse();
+            }
+
+            const tbody = document.getElementById('adminTableBody');
+            if(filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400">Tiada rekod penilaian dijumpai. (Sila klik Muat Semula selepas menghantar data baharu)</td></tr>`;
+                return;
+            }
+
+            let html = '';
+            filtered.forEach((item) => {
+                const percent = ((item.totalScore / 30) * 100).toFixed(1);
+                html += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-3 font-bold text-slate-900">${item.school}</td>
+                        <td class="p-3 font-semibold text-slate-700">${item.project}</td>
+                        <td class="p-3 font-black text-indigo-600">${item.totalScore} / 30</td>
+                        <td class="p-3 font-bold text-slate-600">${percent}%</td>
+                        <td class="p-3"><span class="px-2 py-1 bg-emerald-50 text-emerald-700 font-bold rounded text-[10px] border border-emerald-200">LENGKAP</span></td>
+                        <td class="p-3 text-slate-600">${item.panel}</td>
+                        <td class="p-3 text-slate-500">${item.timestamp}</td>
+                        <td class="p-3 text-center space-x-2">
+                            <button onclick='openDetailModal(${JSON.stringify(item)})' class="text-indigo-600 underline font-bold hover:text-indigo-800">Lihat butiran</button>
+                            <button onclick="deleteSubmission('${item.timestamp}', '${item.school}', '${item.project}')" class="px-2.5 py-1 bg-rose-600 text-white rounded font-bold hover:bg-rose-700 transition">Padam</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function openDetailModal(item) {
+            let s = item.scores || {};
+            let sumB = 0;
+            for(let k in s) {
+                if(k.startsWith('B')) sumB += s[k];
+            }
+            const percent = ((item.totalScore / 30) * 100).toFixed(1);
+
+            let html = `
+                <div class="font-extrabold text-slate-900 pb-2 border-b">
+                    ${item.school} • ${item.project} • ${item.totalScore}/30 (${percent}%)
+                </div>
+                <div class="space-y-4 pt-2">
+                    <div class="font-bold text-indigo-600">Pameran & Poster (B): ${sumB} / 30</div>
+                    ${criteriaList.B.map(q => `<div class="text-slate-700">${q.id}: <strong>${s[q.id] || 0} / 5</strong> — ${q.text}</div>`).join('')}
+
+                    <div class="pt-4 border-t text-slate-800 space-y-1">
+                        <div><strong>Panel:</strong> ${item.panel}</div>
+                        <div><strong>Ulasan:</strong> ${item.comments}</div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('detailModalContent').innerHTML = html;
+            document.getElementById('detailModal').classList.remove('hidden');
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.add('hidden');
+        }
+
+        function deleteSubmission(timestamp, school, project) {
+            if(confirm("Adakah anda pasti mahu memadam rekod ini dari Google Sheets?")) {
+                fetch(GOOGLE_SHEET_WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: "delete", timestamp: timestamp, school: school, project: project })
+                }).catch(err => console.log('Delete sync note:', err));
+
+                showAlert("Berjaya", "Arahan padam telah dihantar ke Google Sheets. Sila klik 'Muat Semula' sebentar lagi.", "success");
+                setTimeout(loadAdminData, 1500);
+            }
+        }
+
+        function exportCSV() {
+            let subs = JSON.parse(localStorage.getItem('pinovas_submissions_b') || '[]');
+            if(subs.length === 0) {
+                alert("Tiada data untuk dieksport.");
+                return;
+            }
+            let csv = "Timestamp,School,Team,Project,Panel,TotalScore,Comments\n";
+            subs.forEach(s => {
+                csv += `"${s.timestamp}","${s.school}","${s.team}","${s.project}","${s.panel}",${s.totalScore},"${s.comments}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `PINOVAS_2026_KomponenB_${new Date().toISOString().slice(0,10)}.csv`;
+            link.click();
+        }
+
+        function showAlert(title, message, type) {
+            document.getElementById('alertTitle').innerText = title;
+            document.getElementById('alertMessage').innerText = message;
+            const icon = document.getElementById('alertIcon');
+            if(type === 'warning') {
+                icon.className = "w-14 h-14 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center mx-auto text-2xl border border-amber-200";
+                icon.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
+            } else {
+                icon.className = "w-14 h-14 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl border border-emerald-200";
+                icon.innerHTML = `<i class="fa-solid fa-check"></i>`;
+            }
+            document.getElementById('modalAlert').classList.remove('hidden');
+        }
+
+        function closeAlert() {
+            document.getElementById('modalAlert').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
