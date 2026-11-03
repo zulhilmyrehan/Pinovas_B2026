@@ -406,14 +406,14 @@ Pameran dan Poster                                                              
             "SMK Tun Syed Nasir Ismail": { team: "Pine Glow Innovators", project: "Oilsorb Ecopad Modular" },
             "SMK Seksyen 18": { team: "The Eco - Sentinels", project: "PINEPURE : Deodoran Organik Ekstrak Jambul Nanas" },
             "Kolej Vokasional Ampangan": { team: "KVAS Econova Team", project: "Reclean Brewscrub" },
-            "SMK Jeneri": { team: "Green Igniters", project: "Ecoflam Cube" },
+            "SMK Jeneri": { team: "Green Igniters", project: "Ecoflame Cube" },
             "SM Sains Pasir Puteh": { team: "Econova", project: "PINERGY" },
             "SMK Perantau Damai": { team: "Triple A Innovator", project: "Pineco Grow Pot" },
             "SMK Matang Jaya": { team: "Pine Kenyalang", project: "BIO-FLOCPINE" },
             "Kolej Vokasional Datuk Seri Abu Zahar Isnin": { team: "Tepastart", project: "TEPASTART : Starter Serbuk Sourdough" }
         };
 
-        const GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxVCD_QKwfj5VZrUOI2mn-lDHC8nSxShQaALHueSi9ZOipLWSF23eIw3jUO5Ufv6jnd/exec';
+        const GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxtnuGSY6ITm6HAL_XicWYj8MFGkKS97vVdg5-GoWzMK7_VKKNvLgDEgIX582fA21FB/exec';
 
         const criteriaList = {
             B: [
@@ -699,6 +699,9 @@ Pameran dan Poster                                                              
             let html = '';
             filtered.forEach((item) => {
                 const percent = ((item.totalScore / 30) * 100).toFixed(1);
+                const safeId = String(item.id || '').replace(/'/g, "\\'");
+                const safeSchool = String(item.school || '').replace(/'/g, "\\'");
+                
                 html += `
                     <tr class="hover:bg-slate-50">
                         <td class="p-3 font-bold text-slate-900">${item.school}</td>
@@ -710,7 +713,7 @@ Pameran dan Poster                                                              
                         <td class="p-3 text-slate-500">${item.timestamp}</td>
                         <td class="p-3 text-center space-x-2">
                             <button onclick='openDetailModal(${JSON.stringify(item)})' class="text-indigo-600 underline font-bold hover:text-indigo-800">Lihat butiran</button>
-                            <button onclick="deleteSubmission('${item.timestamp}', '${item.school}', '${item.project}')" class="px-2.5 py-1 bg-rose-600 text-white rounded font-bold hover:bg-rose-700 transition">Padam</button>
+                            <button onclick="deleteSubmission('${safeId}', '${safeSchool}')" class="px-2.5 py-1 bg-rose-600 text-white rounded font-bold hover:bg-rose-700 transition">Padam</button>
                         </td>
                     </tr>
                 `;
@@ -748,17 +751,28 @@ Pameran dan Poster                                                              
             document.getElementById('detailModal').classList.add('hidden');
         }
 
-        function deleteSubmission(timestamp, school, project) {
-            if(confirm("Adakah anda pasti mahu memadam rekod ini dari Google Sheets?")) {
-                fetch(GOOGLE_SHEET_WEB_APP_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ action: "delete", timestamp: timestamp, school: school, project: project })
-                }).catch(err => console.log('Delete sync note:', err));
+        async function deleteSubmission(recordId, schoolName) {
+            if(confirm(`Adakah anda pasti mahu memadam rekod bagi sekolah "${schoolName}" ini dari pangkalan data?`)) {
+                try {
+                    const deleteUrl = `${GOOGLE_SHEET_WEB_APP_URL}?action=delete&id=${encodeURIComponent(recordId)}`;
+                    
+                    // Panggil URL get untuk memadam baris dalam Google Sheets
+                    await fetch(deleteUrl);
 
-                showAlert("Berjaya", "Arahan padam telah dihantar ke Google Sheets. Sila klik 'Muat Semula' sebentar lagi.", "success");
-                setTimeout(loadAdminData, 1500);
+                    // Kemas kini cache storan tempatan serta-merta
+                    let subs = JSON.parse(localStorage.getItem('pinovas_submissions_b') || '[]');
+                    subs = subs.filter(item => item.id !== recordId);
+                    localStorage.setItem('pinovas_submissions_b', JSON.stringify(subs));
+
+                    showAlert("Berjaya", "Rekod telah berjaya dipadamkan dari Google Sheets.", "success");
+                    filterTableData();
+                    
+                    // Muat semula data terkini dari pelayan
+                    setTimeout(loadAdminData, 1200);
+                } catch (err) {
+                    console.error("Delete error:", err);
+                    showAlert("Ralat", "Gagal menghubungi pelayan Google Sheets untuk memadam rekod.", "warning");
+                }
             }
         }
 
@@ -790,7 +804,6 @@ Pameran dan Poster                                                              
                 icon.className = "w-14 h-14 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl border border-emerald-200";
                 icon.innerHTML = `<i class="fa-solid fa-check"></i>`;
             }
-            document.getElementById('modalAlert').classList.add('hidden'); // hidden first to reset
             document.getElementById('modalAlert').classList.remove('hidden');
         }
 
